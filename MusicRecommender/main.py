@@ -1,5 +1,6 @@
 import csv
 from ColumnEnum import ColumnEnum
+import HDBSCAN
 
 artistEnum = {}
 
@@ -8,6 +9,8 @@ def main():
     data = loadData()
     data = cleanData(data)
     #print(str(data))
+    model = HDBSCAN.TrainModel(data)
+
 
 
 # loads sample data from file
@@ -51,6 +54,7 @@ def cleanData(data):
         while i < len(row):
             row[i] = float(row[i])
             i = i + 1
+    data = data[0:2000]
     return data
 
 
