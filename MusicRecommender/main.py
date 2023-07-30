@@ -1,13 +1,28 @@
 import csv
+import random
+
 from ColumnEnum import ColumnEnum
+import HDBSCAN
+import copy
 
 artistEnum = {}
 
 
 def main():
     data = loadData()
-    data = cleanData(data)
+    cData = cleanData(copy.deepcopy(data))
     #print(str(data))
+    modelTuple = HDBSCAN.TrainModel(cData)
+    while True:
+        index = int(len(data) * random.random())
+        print("input song: " + data[index][ColumnEnum.name.value] + " by " + data[index][ColumnEnum.artists.value])
+        ret = HDBSCAN.GetRecommendation(modelTuple, cData[index], data)
+        if ret != -1:
+            input("output song: " + ret[ColumnEnum.name.value] + " by " + ret[ColumnEnum.artists.value])
+        else:
+            input("press enter to continue")
+
+
 
 
 # loads sample data from file
@@ -51,6 +66,7 @@ def cleanData(data):
         while i < len(row):
             row[i] = float(row[i])
             i = i + 1
+    # data = data[0:1000]
     return data
 
 
